@@ -16,12 +16,20 @@ install: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 > install -t $(BINDIR) ibj2coff
 > install -t $(BINDIR) coff2dump
 
+winstall: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
+> copy assemble2ibj.exe %IMP_INSTALL_HOME%\bin\*
+> copy coff2dump.exe    %IMP_INSTALL_HOME%\bin\*
+> copy ibj2assemble.exe %IMP_INSTALL_HOME%\bin\*
+> copy ibj2compact.exe  %IMP_INSTALL_HOME%\bin\*
+> copy ibj2coff.exe     %IMP_INSTALL_HOME%\bin\*
+
 # do a minimal tidy up of programs and temporary files
 clean: #
 > rm -f assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 > rm -f *.ppu
 > rm -f *.o
 > rm -f *.lst
+> rm -f *.exe
 
 # remove the installed tools
 clearinstall: #

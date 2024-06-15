@@ -14,17 +14,24 @@ install: assemble2icd icd2assemble icd2dump
 > install -t $(BINDIR) icd2assemble
 > install -t $(BINDIR) icd2dump
 
+winstall: assemble2icd icd2assemble icd2dump
+> copy assemble2icd.exe %IMP_INSTALL_HOME%\bin\*
+> copy icd2assemble.exe %IMP_INSTALL_HOME%\bin\*
+> copy icd2dump.exe     %IMP_INSTALL_HOME%\bin\*
+
 # do a minimal tidy up of programs and temporary files
 clean: #
 > rm -f assemble2icd icd2assemble icd2dump
 > rm -f *.ppu
 > rm -f *.o
+> rm -f *.exe
 
 # really scrub away all programs and temporary files
 superclean: clean
 > rm -f $(BINDIR)/assemble2icd
 > rm -f $(BINDIR)/icd2assemble
 > rm -f $(BINDIR)/icd2dump
+> rm -f *.exe
 
 assemble2icd:
 > fpc -gl assemble2icd.pas
