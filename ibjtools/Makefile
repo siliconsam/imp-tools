@@ -28,7 +28,6 @@ clean: #
 > rm -f assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 > rm -f *.ppu
 > rm -f *.o
-> rm -f *.lst
 > rm -f *.exe
 
 # remove the installed tools
