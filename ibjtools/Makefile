@@ -1,10 +1,9 @@
 .RECIPEPREFIX = >
 
-BASEDIR = /usr/local
-
-BINDIR = ${BASEDIR}/bin
-LIBDIR = ${BASEDIR}/lib
-INCDIR = ${BASEDIR}/include
+BASEDIR=${IMP_TOOLS_HOME}
+BINDIR=${BASEDIR}/bin
+LIBDIR=${BASEDIR}/lib
+INCDIR=${BASEDIR}/include
 
 all: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 
@@ -16,19 +15,13 @@ install: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 > install -t $(BINDIR) ibj2coff
 > install -t $(BINDIR) coff2dump
 
-winstall: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
-> copy assemble2ibj.exe %IMP_INSTALL_HOME%\bin\*
-> copy coff2dump.exe    %IMP_INSTALL_HOME%\bin\*
-> copy ibj2assemble.exe %IMP_INSTALL_HOME%\bin\*
-> copy ibj2compact.exe  %IMP_INSTALL_HOME%\bin\*
-> copy ibj2coff.exe     %IMP_INSTALL_HOME%\bin\*
-
 # do a minimal tidy up of programs and temporary files
 clean: #
 > rm -f assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
+> rm -f *.exe
 > rm -f *.ppu
 > rm -f *.o
-> rm -f *.exe
+> rm -f *.lst
 
 # remove the installed tools
 clearinstall: #
@@ -37,6 +30,12 @@ clearinstall: #
 > rm -f $(BINDIR)/ibj2compact
 > rm -f $(BINDIR)/ibj2coff
 > rm -f $(BINDIR)/coff2dump
+
+> rm -f $(BINDIR)/assemble2ibj.exe
+> rm -f $(BINDIR)/ibj2assemble.exe
+> rm -f $(BINDIR)/ibj2compact.exe
+> rm -f $(BINDIR)/ibj2coff.exe
+> rm -f $(BINDIR)/coff2dump.exe
 
 # really scrub away all programs and temporary files
 superclean: clean
