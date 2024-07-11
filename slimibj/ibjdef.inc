@@ -29,30 +29,37 @@
 %constbyte IF SWT        = 20; ! 'U' switch table offset code word
 %constbyte IF LINE       = 21; ! 'V' line number info for debugger
 %constbyte IF ABSEXT     = 22; ! 'W' external name absolute offset code word
+%constbyte IF VERSION    = 23; ! 'X' IBJ File format version levels
+%constbyte IF COMMENT    = 24; ! 'Y' comment string
 
-  %conststring(16)%array ibj name(IF OBJ:IF ABSEXT) = "IF_OBJ",
-                                                      "IF_DATA",
-                                                      "IF_CONST",
-                                                      "IF_DISPLAY",
-                                                      "IF_JUMP",
-                                                      "IF_JCOND",
-                                                      "IF_CALL",
-                                                      "IF_LABEL",
-                                                      "IF_FIXUP",
-                                                      "IF_SETFIX",
-                                                      "IF_REQEXT",
-                                                      "IF_REFLABEL",
-                                                      "IF_REFEXT",
-                                                      "IF_BSS",
-                                                      "IF_COTWORD",
-                                                      "IF_DATWORD",
-                                                      "IF_SWTWORD",
-                                                      "IF_SOURCE",
-                                                      "IF_DEFEXTCODE",
-                                                      "IF_DEFEXTDATA",
-                                                      "IF_SWT",
-                                                      "IF_LINE",
-                                                      "IF_ABSEXT"
+%constbyte MIN REC TYPE = IF OBJ
+%constbyte MAX REC TYPE = IF COMMENT
+
+  %conststring(16)%array ibj name(MIN REC TYPE:MAX REC TYPE) = "IF_OBJ",
+                                                               "IF_DATA",
+                                                               "IF_CONST",
+                                                               "IF_DISPLAY",
+                                                               "IF_JUMP",
+                                                               "IF_JCOND",
+                                                               "IF_CALL",
+                                                               "IF_LABEL",
+                                                               "IF_FIXUP",
+                                                               "IF_SETFIX",
+                                                               "IF_REQEXT",
+                                                               "IF_REFLABEL",
+                                                               "IF_REFEXT",
+                                                               "IF_BSS",
+                                                               "IF_COTWORD",
+                                                               "IF_DATWORD",
+                                                               "IF_SWTWORD",
+                                                               "IF_SOURCE",
+                                                               "IF_DEFEXTCODE",
+                                                               "IF_DEFEXTDATA",
+                                                               "IF_SWT",
+                                                               "IF_LINE",
+                                                               "IF_ABSEXT",
+                                                               "IF_VERSION",
+                                                               "IF_COMMENT"
 
   %conststring(16)%array condition name(0:5) = "JE",
                                                "JNE",

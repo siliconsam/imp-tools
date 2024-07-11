@@ -36,6 +36,8 @@
     %record %format rec swt(%integer offset)
     %record %format rec line(%integer lineno)
     %record %format rec absext(%integer symbolid,offset)
+    %record %format rec version(%integer major,minor,revision)
+    %record %format rec comment(%string(255) info)
 
     %record %format ibj line(   %integer line id,
                                 %integer id,
@@ -64,7 +66,9 @@
                                     %record(rec defextdata)%name defextdata %or
                                     %record(rec swt)%name swt %or
                                     %record(rec line)%name line %or
-                                    %record(rec absext)%name absext ))
+                                    %record(rec absext)%name absext %or
+                                    %record(rec version)%name version %or
+                                    %record(rec comment)%name comment ))
 
     %constbyte IBJ      = 1;  { valid for modein, modeout }
     %constbyte RECORD   = 2;  { valid for modein, modeout }
@@ -1262,6 +1266,95 @@ end analysis:
     %end
 
 !----------------------------------------------------------------------
+! IF VERSION
+!----------------------------------------------------------------------
+    %string(255)%fn version analysis( %integer line id,
+                                      %byte modein,
+                                      %byte modeout,
+                                      %string(255) aline )
+        %switch inmode(IBJ:RECORD)
+        %switch outmode(IBJ:DUMP)
+        %record(rec version) version
+        %string(255) payload
+
+        -> inmode(modein)
+
+inmode(IBJ):
+        version_major    = hex2short(aline,4)
+        version_minor    = hex2short(aline,8)
+        version_revision = hex2short(aline,12)
+        -> outmode(modeout)
+
+inmode(RECORD):
+        version = item( line id )_version
+        -> outmode(modeout)
+
+outmode(IBJ):
+        payload = short2hex(version_major)
+        payload = payload.short2hex(version_minor)
+        payload = payload.short2hex(version_revision)
+        -> end analysis
+
+outmode(RECORD):
+        item( line id )_version == new( version )
+        item( line id )_version = version
+
+        payload = aline
+        -> end analysis
+
+outmode(DUMP):
+        payload = itos(version_major,0)
+        payload = payload.",".itos(version_minor,0)
+        payload = payload.",".itos(version_revision,0)
+        -> end analysis
+
+end analysis:
+        %result = payload
+    %end
+
+!----------------------------------------------------------------------
+! IF COMMENT
+!----------------------------------------------------------------------
+    %string(255)%fn comment analysis( %integer line id,
+                                      %byte modein,
+                                      %byte modeout,
+                                      %string(255) aline )
+        %switch inmode(IBJ:RECORD)
+        %switch outmode(IBJ:DUMP)
+        %record(rec comment) comment
+        %string(255) payload
+        %string(127) info
+
+        -> inmode(modein)
+
+inmode(IBJ):
+        info = hex2name(aline,4)
+        -> outmode(modeout)
+
+inmode(RECORD):
+        comment = item( line id )_comment
+        -> outmode(modeout)
+
+outmode(IBJ):
+        payload = name2hex( comment_info )
+        -> end analysis
+
+outmode(RECORD):
+        item( line id )_comment == new( comment )
+        item( line id )_comment =  comment
+
+        payload = aline
+        -> end analysis
+
+outmode(DUMP):
+        payload = """".name2hex( comment_info ).""""
+        -> end analysis
+
+end analysis:
+        %result = payload
+    %end
+
+!----------------------------------------------------------------------
 ! ANALYSE IBJ
 !----------------------------------------------------------------------
     %routine analyse ibj( %integer line id,
@@ -1270,7 +1363,7 @@ end analysis:
                            %string(255) aline )
         %switch pre analysis(IBJ:RECORD)
         %switch post analysis(IBJ:DUMP)
-        %switch ibjx(IF OBJ:IF ABSEXT)
+        %switch ibjx(MIN REC TYPE:MAX REC TYPE)
         %integer itype
         %string(255) payload
 
@@ -1378,6 +1471,14 @@ ibjx(IF LINE):
 
 ibjx(IF ABSEXT):
         payload = absext analysis( line id, modein, modeout, aline )
+        -> xibj
+
+ibjx(IF VERSION):
+        payload = version analysis( line id, modein, modeout, aline )
+        -> xibj
+
+ibjx(IF COMMENT):
+        payload = comment analysis( line id, modein, modeout, aline )
         -> xibj
 
 xibj:
@@ -1639,6 +1740,22 @@ end post analysis:
     %end
 
 !----------------------------------------------------------------------
+! prune COMMENT items
+!----------------------------------------------------------------------
+    %routine slim comment items
+        %integer i
+
+        print string( "Pruning COMMENT records")
+        newline
+
+        %for i = 1,1,line count %cycle
+            %if (item(i)_itype = IF COMMENT) %start
+                item(i)_valid = 0
+            %finish
+        %repeat
+    %end
+
+!----------------------------------------------------------------------
 ! renumber all items
 !----------------------------------------------------------------------
     %routine renumber all items
@@ -1678,6 +1795,10 @@ end post analysis:
 
         %if (slim mode&16 # 0) %start
             slim datword items
+        %finish
+
+        %if (slim mode&32 # 0) %start
+            slim comment items
         %finish
 
         ! renumber the items
@@ -1830,6 +1951,7 @@ end post analysis:
             ! 3) prune the excess LABEL records    slim mode&4
             ! 4) prune the unused REQEXT records   slim mode&8
             ! 5) prune the excess DATWORD records  slim mode&16
+            ! 6) remove all COMMENT records        slim mode&32
             %if (slim mode > 0) %start
                 adjust data(slim mode)
             %finish %else %start
@@ -1880,6 +2002,8 @@ end post analysis:
         debug string( "          8 => prune the unused REQEXT entries" )
         debug newline
         debug string( "         16 => prune the surplus DATWORD entries" )
+        debug newline
+        debug string( "         32 => dalete any COMMENT entries" )
         debug newline
         debug string( " e.g.    15 => prune entries by or'ing 8,4,2,1 options" )
         debug newline; debug newline
