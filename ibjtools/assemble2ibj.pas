@@ -248,6 +248,23 @@ IF_ABSEXT:
           writeirecord( fout, IF_ABSEXT, 4, formword( i1 ) + formword( i2 ) );
         end;
 
+IF_VERSION:
+        begin
+          i1 := strToInt(params[1]);
+          i2 := strToInt(params[2]);
+          i3 := strToInt(params[3]);
+
+          writeirecord( fout, IF_VERSION, 6 , formword( i1 )+ formword( i2 ) + formword( i3 ) );
+        end;
+
+IF_COMMENT:
+        begin
+          (* remove the enclosing string quotes *)
+          name := copy(params[1],2,length(params[1]) - 2);
+
+          writeirecord( fout, IF_COMMENT, length( name ), formstring( name ) );
+        end;
+
       else
         writeln('**** ERROR **** Unexpected IBJ command ',params[0],' at line ',lineno);
       end;

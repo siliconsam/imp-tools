@@ -34,6 +34,8 @@ const
     IF_SWT         = 20; // U : switch table offset code word
     IF_LINE        = 21; // V : line number info for debugger
     IF_ABSEXT      = 22; // W : external name absolute offset code word (data external)
+    IF_VERSION     = 23; // X : IBJ file version (Major, Minor, Revision)
+    IF_COMMENT     = 24; // Y : comment text string
 
 type
     tCond = (cNULLCond
@@ -73,6 +75,8 @@ type
            ,cSWT
            ,cLINE
            ,cABSEXT
+           ,cVERSION
+           ,cCOMMENT
            );
 
     tOBJ =
@@ -201,6 +205,19 @@ type
         offset : integer;
     end;
 
+    tVERSION =
+    record
+        Major    : integer;
+        Minor    : integer;
+        Revision : integer;
+    end;
+
+    tCOMMENT =
+    record
+        name : string;
+    end;
+
+
     tIBJPtr = ^tIBJRec;
     tIBJRec =
     record
@@ -233,6 +250,8 @@ type
         cSWT:        ( xSWT        : tSWT; );
         cLINE:       ( xLINE       : tLINE; );
         cABSEXT:     ( xABSEXT     : tABSEXT; );
+        cVERSION:    ( xVERSION    : tVERSION; );
+        cCOMMENT:    ( xCOMMENT    : tCOMMENT; );
     end;
 
 implementation
@@ -265,6 +284,8 @@ implementation
         'U': c := cSWT;
         'V': c := cLINE;
         'W': c := cABSEXT;
+        'X': c := cVERSION;
+        'Y': c := cCOMMENT;
         else
             c := cNULLibj; // invalid IBJ code value
         end;
@@ -299,6 +320,8 @@ implementation
         'IF_SWT':        c := cSWT;
         'IF_LINE':       c := cLINE;
         'IF_ABSEXT':     c := cABSEXT;
+        'IF_VERSION':    c := cVERSION;
+        'IF_COMMENT':    c := cCOMMENT;
         else
             c := cNULLibj; // invalid IBJ code value
         end;
@@ -333,6 +356,8 @@ implementation
         cSWT:        c := 'IF_SWT';
         cLINE:       c := 'IF_LINE';
         cABSEXT:     c := 'IF_ABSEXT';
+        cVERSION:    c := 'IF_VERSION';
+        cCOMMENT:    c := 'IF_COMMENT';
         else
             c := 'IF_NULL'; // invalid IBJ code value
         end;
@@ -686,6 +711,18 @@ implementation
                 // where the actual offset is added to the specId
                 theIBJ^.xABSEXT.specId := readword( copy( theData, 1, 4 ) ) ;
                 theIBJ^.xABSEXT.offset := readword( copy( theData, 5, 4 ) );
+            end;
+        cVERSION:
+            begin
+                // IBJ File format version
+                theIBJ^.xVERSION.Major    := readword( copy( theData, 1, 4 ) ); // Major level
+                theIBJ^.xVERSION.Minor    := readword( copy( theData, 5, 4 ) ); // Minor level
+                theIBJ^.xVERSION.Revision := readword( copy( theData, 9, 4 ) ); // Revision level
+            end;
+        cCOMMENT:
+            begin
+                // comment string
+                theIBJ^.xCOMMENT.name := readAscii( theData );
             end;
         else
         end;

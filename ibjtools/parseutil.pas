@@ -84,6 +84,9 @@ implementation
     specId       : integer;
     offset       : longint;
     count        : integer;
+    major        : integer;
+    minor        : integer;
+    revision     : integer;
 
     // pass specific variables
     // cPassCoffCreate variables
@@ -1510,6 +1513,75 @@ cPassCompactWrite:
           else
           end;
         end;
+
+IF_VERSION:
+        begin
+          // IBJ file format info: <major> <minor> <revision>
+          major    := readword( copy( theData, 1,4 ) ); // Major level of IBJ file format
+          minor    := readword( copy( theData, 5,4 ) ); // Minor level of IBJ file format
+          revision := readword( copy( theData, 9,4 ) ); // Revision level of IBJ file format
+
+          case passId of
+cPassCoffCreate:
+            begin
+              // do nothing
+            end;
+cPassCoffWrite:
+            begin
+              // do nothing
+            end;
+cPassAssemble:
+            begin
+              write(fout,'IF_VERSION,');
+              write(fout,major,',');
+              write(fout,minor,',');
+              write(fout,revision);
+              writeln(fout);
+            end;
+cPassCompactRead:
+            begin
+              // do nothing
+            end;
+cPassCompactWrite:
+            begin
+              writeirecord( fout, IF_VERSION, theSize, theData );
+            end;
+          else
+          end;
+        end;
+
+IF_COMMENT:
+        begin
+          // Comment string
+          name := readAscii( theData );
+
+          case passId of
+cPassCoffCreate:
+            begin
+              // do nothing
+            end;
+cPassCoffWrite:
+            begin
+              // do nothing
+            end;
+cPassAssemble:
+            begin
+              write(fout,'IF_COMMENT,');
+              write(fout,name);
+              writeln(fout);
+            end;
+cPassCompactRead:
+            begin
+              // do nothing
+            end;
+cPassCompactWrite:
+            begin
+              writeirecord( fout, IF_COMMENT, theSize, theData );
+            end;
+          else
+          end;
+        end;
+
       else
         if debug then
         begin

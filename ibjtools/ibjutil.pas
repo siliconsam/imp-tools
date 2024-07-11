@@ -36,6 +36,8 @@ const
     IF_SWT         = 20; // U : switch table offset code word
     IF_LINE        = 21; // V : line number info for debugger
     IF_ABSEXT      = 22; // W : external name absolute offset code word (data external)
+    IF_VERSION     = 23; // X : IBJ File Format version
+    IF_COMMENT     = 24; // Y : comment string
 
   function IBJcode( x : string ): integer;
   function IBJname( x : integer ): string;
@@ -84,6 +86,8 @@ implementation
 'IF_SWT':        c := IF_SWT;
 'IF_LINE':       c := IF_LINE;
 'IF_ABSEXT':     c := IF_ABSEXT;
+'IF_VERSION':    c := IF_VERSION;
+'IF_COMMENT':     c := IF_COMMENT;
       else
         c := IF_NULL; // invalid IBJ code value
       end;
@@ -118,6 +122,8 @@ IF_DEFEXTDATA: c := 'IF_DEFEXTDATA';
 IF_SWT:        c := 'IF_SWT';
 IF_LINE:       c := 'IF_LINE';
 IF_ABSEXT:     c := 'IF_ABSEXT';
+IF_VERSION:    c := 'IF_VERSION';
+IF_COMMENT:    c := 'IF_COMMENT';
       else
         c := 'IF_NULL'; // invalid IBJ code value
       end;
