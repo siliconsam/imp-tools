@@ -538,6 +538,7 @@ chr(10):
           end;
 'B':      begin
             (* REPEAT *)
+            (* BACKWARD *)
             (* JUMP BACKWARD to Compiler label *)
             uint1 := StrToInt( copy( params[1], 2, length( params[1] ) - 1 ) );
 
@@ -618,6 +619,7 @@ chr(10):
           end;
 'F':      begin
             (* GOTO *)
+            (* FORWARD *)
             (* JUMP FORWARD to Compiler label *)
             uint1 := StrToInt( copy( params[1], 2, length( params[1] ) - 1 ) );
 
