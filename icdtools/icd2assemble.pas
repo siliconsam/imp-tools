@@ -25,7 +25,6 @@ var
 
   procedure disassemble();
   var
-    altMode : char;
     int1 : integer32;
     uint1,
     uint2 : uinteger32;
@@ -1064,16 +1063,6 @@ chr(10):
               writeinst( ficd, r.icode );
             end;
           end;
-'|':      begin
-            (* ALT_PSR *)
-            tablevels( fout );
-            writeln( fout, r.mnemonic );
-
-            if debugFlag then
-            begin
-              writeinst( ficd, r.icode );
-            end;
-          end;
 '}':      begin
             (* FINISH *)
             finishlevels( fout );
@@ -1089,24 +1078,6 @@ chr(10):
             if debugFlag then
             begin
               writeinst( ficd, r.icode );
-            end;
-          end;
-'~':      begin
-            (* ALT *)
-            altMode := readchar(fin);
-
-            tablevels( fout );
-            case altMode of
-        'A':  writeln( fout, r.mnemonic,' BEGIN');
-        'B':  writeln( fout, r.mnemonic,' END');
-        'C':  writeln( fout, r.mnemonic,' NEXT');
-            else
-            end;
-
-            if debugFlag then
-            begin
-              writeinst( ficd, r.icode );
-              writechar( ficd, altMode );
             end;
           end;
         else

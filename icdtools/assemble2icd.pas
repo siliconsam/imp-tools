@@ -66,7 +66,6 @@ false:  ( s : array[1..4] of char; );
     s1,
     s2 : string;
 
-    altMode : char;
     int1 : integer32;
     uint1,
     uint2 : uinteger32;
@@ -1407,16 +1406,6 @@ chr(10):
             inStart := true;
 
           end;
-'|':      begin
-            (* ALT_PSR *)
-            writeinst( ficd, r.icode );
-
-            if debugFlag then
-            begin
-              tablevels( fout );
-              writeln( fout, r.mnemonic );
-            end;
-          end;
 '}':      begin
             (* FINISH *)
             writeinst( ficd, r.icode );
@@ -1434,30 +1423,6 @@ chr(10):
             inStart := false;
             defMode := false;
 
-          end;
-'~':      begin
-            (* ALT *)
-            case params[1] of
-    'BEGIN':  altMode := 'A';
-      'END':  altMode := 'B';
-     'NEXT':  altMode := 'C';
-            else
-              altMode := 'X';
-            end;
-
-            writeinst( ficd, r.icode );
-            writechar( ficd, altMode );
-
-            if debugFlag then
-            begin
-              tablevels( fout );
-              case altMode of
-          'A':  writeln( fout, r.mnemonic,' BEGIN');
-          'B':  writeln( fout, r.mnemonic,' END');
-          'C':  writeln( fout, r.mnemonic,' NEXT');
-              else
-              end;
-            end;
           end;
         else
         end;

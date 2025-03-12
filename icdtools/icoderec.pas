@@ -418,9 +418,6 @@ Pass2 Compiler (Intel 386)
     D   PUSHR       _   SLABEL        {   START
     E   CALL        a   ACCESS        |
     F   FORWARD     b   BOUNDS        }   FINISH
-                                      ~A  ALTBEG
-                                      ~B  ALTEND
-                                      ~C  ALTNEXT
 
 *)
 
@@ -590,7 +587,6 @@ const
 'START':     ch := '{';
 // '|'
 'FINISH':    ch := '}';
-'ALT':       ch := '~';
     else
       ch := chr(255);
     end;
@@ -685,7 +681,7 @@ chr(10): m := 'ENDOFFILE';
 '{':     m := 'START';
 // |
 '}':     m := 'FINISH';
-'~':     m := 'ALT';
+// ~
     else
       m := 'ILLEGAL';
     end;
