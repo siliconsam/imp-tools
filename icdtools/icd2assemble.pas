@@ -1080,6 +1080,22 @@ chr(10):
               writeinst( ficd, r.icode );
             end;
           end;
+'~':      begin
+            (* VERSION *)
+            r.b1 := readuinteger8( fin );
+            r.b2 := readuinteger8( fin );
+
+            tablevels( fout );
+            writeln( fout, r.mnemonic,' ', r.b1,',',r.b2 );
+
+            if debugFlag then
+            begin
+              writeinst( ficd, r.icode );
+              writebyte( ficd, r.b1 );
+              writebyte( ficd, r.b2 );
+            end;
+          end;
+
         else
         end;
 

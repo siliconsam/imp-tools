@@ -1424,6 +1424,27 @@ chr(10):
             defMode := false;
 
           end;
+'~':      begin
+            (* VERSION *)
+            SplitParam := SplitString( params[1], ',' );
+            s1 := Splitparam[0];
+            s2 := SplitParam[1];
+
+            r.b1 := StrToInt( s1 );
+            r.b2 := StrToInt( s2 );;
+
+            writeinst( ficd, r.icode );
+            writebyte( ficd, r.b1 );
+            writebyte( ficd, r.b2 );
+
+            if debugFlag then
+            begin
+              tablevels( fout );
+              writeln( fout, r.mnemonic, ' ',r.b1,' ',r.b2 );
+              writeln( fout, r.mnemonic );
+            end;
+          end;
+
         else
         end;
       end;

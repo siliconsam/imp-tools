@@ -455,7 +455,7 @@ chr(10),
 '@','^','D':      ( t : shortint; s : string; );
 '$':              ( tag : word; name : string; defTypeForm,defSize : word; defDim,defFlags : byte; defMode : boolean );
 'N':              ( n : longint; );
-'~':              ( ch : char; );
+'~':              ( b1, b2 : byte; );
 chr(255):         ();
   end;
 
@@ -587,6 +587,7 @@ const
 'START':     ch := '{';
 // '|'
 'FINISH':    ch := '}';
+'VERSION':   ch := '~';
     else
       ch := chr(255);
     end;
@@ -681,7 +682,7 @@ chr(10): m := 'ENDOFFILE';
 '{':     m := 'START';
 // |
 '}':     m := 'FINISH';
-// ~
+'~':     m := 'VERSION';
     else
       m := 'ILLEGAL';
     end;
