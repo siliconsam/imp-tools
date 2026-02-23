@@ -10,8 +10,12 @@ all: slimibj
 wall: wslimibj
 
 # We need to build the various programs
-install: slimibj
+installx: slimibj
 > install -t $(BINDIR) slimibj
+
+# We need to build the various programs
+install: slimibj
+> cp slimibj ${IMP_INSTALL_HOME}/bin/slimibj
 
 # remove the installed tools
 clearinstall: #

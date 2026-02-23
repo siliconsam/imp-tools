@@ -74,6 +74,9 @@
     %constbyte RECORD   = 2;  { valid for modein, modeout }
     %constbyte DUMP     = 3;  { only valid for modeout }
 
+    { used to detect end of file }
+    %constant %integer eof = -1
+
     ! Declare the largest count of ibj records expected
     %constinteger max records = 150000
     ! Make space for the collection of ibj records  

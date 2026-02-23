@@ -8,12 +8,20 @@ INCDIR=${BASEDIR}/include
 all: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 
 # We need to build the various programs
-install: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
+installx: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
 > install -t $(BINDIR) assemble2ibj
 > install -t $(BINDIR) ibj2assemble
 > install -t $(BINDIR) ibj2compact
 > install -t $(BINDIR) ibj2coff
 > install -t $(BINDIR) coff2dump
+
+# We need to build the various programs
+install: assemble2ibj ibj2assemble ibj2compact ibj2coff coff2dump
+> cp assemble2ibj  ${IMP_INSTALL_HOME}/bin/assemble2ibj
+> cp ibj2assemble  ${IMP_INSTALL_HOME}/bin/ibj2assemble
+> cp ibj2compact   ${IMP_INSTALL_HOME}/bin/ibj2compact
+> cp ibj2coff      ${IMP_INSTALL_HOME}/bin/ibj2coff
+> cp coff2dump     ${IMP_INSTALL_HOME}/bin/coff2dump
 
 # do a minimal tidy up of programs and temporary files
 clean: #
@@ -24,7 +32,7 @@ clean: #
 > rm -f *.lst
 
 # remove the installed tools
-clearinstall: #
+clearinstallx: #
 > rm -f $(BINDIR)/assemble2ibj
 > rm -f $(BINDIR)/ibj2assemble
 > rm -f $(BINDIR)/ibj2compact

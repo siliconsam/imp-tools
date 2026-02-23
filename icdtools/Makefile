@@ -9,10 +9,19 @@ INCDIR = ${BASEDIR}/include
 all: assemble2icd icd2assemble icd2dump
 
 # We need to build the various programs
-install: assemble2icd icd2assemble icd2dump
+installx: assemble2icd icd2assemble icd2dump
 > install -t $(BINDIR) assemble2icd
 > install -t $(BINDIR) icd2assemble
 > install -t $(BINDIR) icd2dump
+
+# We need to build the various programs
+install: assemble2icd icd2assemble icd2dump
+> cp assemble2icd ${IMP_INSTALL_HOME}/bin/assemble2icd
+> cp icd2assemble ${IMP_INSTALL_HOME}/bin/icd2assemble
+> cp icd2dump     ${IMP_INSTALL_HOME}/bin/icd2dump
+
+clearinstallx: #
+> rm -f ${IMP_INSTALL_HOME}/bin/*icd*
 
 clearinstall: #
 > rm -f $(BINDIR)/*icd*
